@@ -332,7 +332,7 @@ contract UniverselPair is IUniverselPair, UniverselERC20 {
     }
 
     // if fee is on, mint liquidity equivalent to 8/25 of the growth in sqrt(k)
-    function _mintFee(uint112 _reserve0, uint112 _reserve1) private returns (bool feeOn) {
+    function _mintFee(uint112 _reserve0, uint112 _reserve1) private returns (bool feeOn) {//why are we minting?????????
         address feeTo = IUniverselFactory(factory).feeTo();
         feeOn = feeTo != address(0);
         uint _kLast = kLast; // gas savings
@@ -419,11 +419,13 @@ contract UniverselPair is IUniverselPair, UniverselERC20 {
         balance0 = IERC20(_token0).balanceOf(address(this));
         balance1 = IERC20(_token1).balanceOf(address(this));
         }
+        // **********
         uint amount0In = balance0 > _reserve0 - amount0Out ? balance0 - (_reserve0 - amount0Out) : 0;
         uint amount1In = balance1 > _reserve1 - amount1Out ? balance1 - (_reserve1 - amount1Out) : 0;
         require(amount0In > 0 || amount1In > 0, 'Universel: INSUFFICIENT_INPUT_AMOUNT');
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
-        uint balance0Adjusted = (balance0.mul(10000).sub(amount0In.mul(25)));
+        // *******************************************************************************
+        uint balance0Adjusted = (balance0.mul(10000).sub(amount0In.mul(25)));//here??????
         uint balance1Adjusted = (balance1.mul(10000).sub(amount1In.mul(25)));
         require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(10000**2), 'Universel: K');
         }
